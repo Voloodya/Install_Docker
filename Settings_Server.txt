@@ -1,0 +1,419 @@
+https://vscale.io/panel/scalets/1329909/
+MobaXterm_installer_12.4
+Для доступа к Debian
+логин:root
+пароль:xfitr2rxre
+
+Параметры публичной сети
+IP-адрес:5.53.124.88
+Маска подсети:255.255.255.0
+Шлюз:5.53.124.1
+
+ssh root@79.143.31.135
+
+New user: vladimir vladrock
+
+apt-get update
+
+Настройка SSH
+1) Если вы еще не подключены к своему серверу, войдите в систему как пользователь root,
+используя следующую команду (замените выделенную часть команды на публичный IP-адрес вашего сервера):
+
+ssh root@your_server_ip
+
+2) Создание нового пользователя
+
+adduser vladimir
+
+3) Вредоставление административных привилегий
+   Настроить так называемые привилегии суперпользователя или привилегии root для нашей обычной учетной записи
+   Чтобы добавить эти привилегии нашему новому пользователю, нам нужно добавить нового пользователя в группу sudo
+   От имени пользователя root
+
+usermod -aG sudo vladimir
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+4) Настройка базового брандмауэра
+
+apt install ufw
+ufw app list 
+ufw allow OpenSSH - добавление службы в разрешенные
+ufw enable - запуск
+ufw enable - выключение
+ufw status ($ sudo ufw status verbose)
+
+ufw logging off - отключение логирования
+ufw logging on - включение логирования
+
+ufw ? - справка по командам
+
+Политики брандмауэра UFW находится в файле /etc/default/ufw и могут быть изменены с помощью следующей команды.
+$ sudo ufw default deny incoming
+$ sudo ufw default allow outgoing
+
+Вы можете просмотреть все доступные профили приложений на своем сервере, используя следующую команду:
+
+$ sudo ufw app list
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+5) Включение внешнего доступа для добавленного пользователя
+
+ssh vladimir@fast-water
+
+su name_user
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////УСТАНОВКА JAVA/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+http://www.webupd8.org/2014/03/how-to-install-oracle-java-8-in-debian.html
+https://www.digitalocean.com/community/tutorials/how-to-install-java-with-apt-get-on-debian-8
+https://www.codeflow.site/ru/article/java__how-to-install-oracle-jdk-8-on-debian
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+sudo apt-get install openjdk-8-jdk
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[username:~/] sudo add-apt-repository ppa:webupd8team/java
+[username:~/] sudo apt-get update
+[username:~/] sudo apt-get install oracle-java8-installer
+[username:~/] sudo apt-get install oracle-java8-set-default
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+https://www.javahelps.com/2015/03/install-oracle-jdk-in-ubuntu.html
+https://www.oracle.com/java/technologies/javase-jdk8-downloads.html
+
+wget "https:..."
+wget -P /usr/lib/jvm "https:..."
+cd /usr/lib/jvm
+
+tar -xvzf /usr/lib/jvm/jdk-8u241-linux-x64.tar.gz
+
+открыть файл переменных среды
+sudo gedit /etc/environment
+В открывшемся файле добавьте следующие папки bin в существующую переменную PATH
+/usr/lib/jvm/jdk1.8.0_231/bin
+/usr/lib/jvm/jdk1.8.0_231/db/bin
+/usr/lib/jvm/jdk1.8.0_231/jre/bin
+Добавьте следующие переменные окружения в конец файла
+J2SDKDIR="/usr/lib/jvm/jdk1.8.0_241"
+J2REDIR="/usr/lib/jvm/jdk1.8.0_241/jre"
+JAVA_HOME="/usr/lib/jvm/jdk1.8.0_241"
+DERBY_HOME="/usr/lib/jvm/jdk1.8.0_241/db"
+Файл среды до модификации:
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
+Файл среды после модификации:
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/jvm/jdk1.8.0_241/bin:/usr/lib/jvm/jdk1.8.0_241/db/bin:/usr/lib/jvm/jdk1.8.0_241/jre/bin"
+J2SDKDIR="/usr/lib/jvm/jdk1.8.0_241"
+J2REDIR="/usr/lib/jvm/jdk1.8.0_241/jre"
+JAVA_HOME="/usr/lib/jvm/jdk1.8.0_241"
+DERBY_HOME="/usr/lib/jvm/jdk1.8.0_241/db"
+Введите следующие команды, чтобы сообщить системе о местонахождении Java. В зависимости от вашей версии JDK пути могут быть разными.
+sudo update-alternatives --install "/usr/bin/java" "java" "/usr/lib/jvm/jdk1.8.0_241/bin/java" 0
+sudo update-alternatives --install "/usr/bin/javac" "javac" "/usr/lib/jvm/jdk1.8.0_241/bin/javac" 0
+sudo update-alternatives --set java /usr/lib/jvm/jdk1.8.0_241/bin/java
+sudo update-alternatives --set javac /usr/lib/jvm/jdk1.8.0_241/bin/javac
+Чтобы проверить настройку, введите следующие команды и убедитесь, что они печатают расположение java и javac,
+как вы указали на предыдущем шаге.
+update-alternatives --list java
+update-alternatives --list javac
+Перезагрузите компьютер
+java -version
+
+( Обновите JDK по умолчанию как для java , так и для` javac`
+$ update-alternatives --config java
+There are 2 choices for the alternative java (providing/usr/bin/java).
+$ update-alternatives --config javac )
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+Тест установленной Java:
+mkdir /home/vladimir/Java_Applications
+cd /home/vladimir/Java_Applications
+ls
+sudo nano HelloWorld.java
+public class HelloWorld {
+   public static void main(String[] args) {
+      System.out.println("Hello World");
+   }
+}
+Ctrl+X
+ls
+sudo javac HelloWorld.java
+sudo java HelloWorld
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////Установка MySQL Server//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+https://www.8host.com/blog/ustanovka-poslednej-versii-mysql-v-debian-9/
+Среди дистрибутивов Linux популярны репозитории с форматом метаданных YUM для дистрибутивов на базе RPM-пакетов,
+ и репозитории с метаданными APT для дистрибутивов на основе DEB-пакетов.
+https://dev.mysql.com/downloads/ --> https://dev.mysql.com/downloads/repo/apt/
+
+cd /tmp
+
+wget "https://dev.mysql.com/get/mysql-apt-config_0.8.15-1_all.deb"
+
+sudo dpkg -i mysql-apt-config*
+Команда dpkg используется для установки, удаления и проверки пакетов программного обеспечения .deb. Флаг –i указывает компоненты, которые нужно установить.
+
+После этого репозиторий будет добавлен на сервер. Обновите индекс пакетов:
+sudo apt update
+Репозиторий MySQL добавлен. Теперь с его помощью можно установить последнюю версию MySQL. Чтобы обновить конфигурацию этих репозиториев, просто запустите:
+sudo dpkg-reconfigure mysql-apt-config
+
+Затем выберите новые параметры и обновите индекс пакетов:
+sudo apt-get update
+
+Установите новую версию MySQL:
+apt install mysql-server mysql-client
+
+systemctl enable mysql && systemctl start mysql
+
+Безопасность MySQL
+
+mysql_secure_installation
+
+Тестирование установки MySQL
+
+mysqladmin -u root -p version
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+Java-mysql connector (version 5.1.47)															//
+																								//
+//wget "https://downloads.mysql.com/archives/get/p/3/file/mysql-connector-java-5.1.47.tar.gz"	//
+//tar -xvzf /usr/lib/mysql_connector_java/jdk-8u241-linux-x64.tar.gz							//
+sudo apt-cache search connector																	//
+apt-get install mysql-connector-java															//
+apt	search mysql-connector //mysql-connector-java 8.0.19										//
+																								//
+																								//
+																								//
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+Создание БД
+																								//
+mysql -u root -p																				//
+mysql> CREATE DATABASE db_fastwater;	
+
+show databases;
+show tables;																					//
+																								//
+Создайте нового пользователя:																	//
+mysql> create user vs@localhost;																//
+ALTER USER vs@localhost IDENTIFIED BY 'root';													//
+(ALTER USER 'имя пользователя'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'пароль';)	//
+(DROP USER 'имя пользователя'@'localhost';)														//
+GRANT ALL PRIVILEGES ON db_fastwater.* TO vs@localhost;											//
+FLUSH PRIVILEGES;																				//
+Все пользователь хранятся в БД mysql, проверим:													//
+use mysql; // выбераем нужную БД																//
+select user, host from user; // выводим все данные таблицы user									//
+Ctrl+C																							//
+Exit																							//
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////Установка Tomcat + Nginx////////////////////////////////////////////////////////////////////////////////////////////
+
+Tomcat (Login: tomcat Password: vladrock)
+https://www.digitalocean.com/community/tutorials/install-tomcat-9-debian-9
+https://linuxize.com/post/how-to-install-tomcat-9-on-debian-9/
+https://tecadmin.net/install-apache-tomcat-9-on-debian/
+https://andreyex.ru/operacionnaya-sistema-debian/kak-ustanovit-tomcat-9-na-debian-9/
+
+groupadd tomcat
+usermod -aG tomcat vladimir
+vi /etc/group - список всех групп и их пользователей
+Ctrl+Z
+su vladimir
+cd /tmp
+wget http://mirror.linux-ia64.org/apache/tomcat/tomcat-9/v9.0.31/bin/apache-tomcat-9.0.31.tar.gz
+sudo mkdir /opt/tomcat
+sudo tar xzvf apache-tomcat-9*tar.gz -C /opt/tomcat --strip-components=1
+Перейдите в каталог, в который мы распаковали установку Tomcat:
+cd /opt/tomcat
+Дайте tomcat-группе право собственности на весь каталог установки:
+sudo chgrp -R tomcat /opt/tomcat
+Затем дайте tomcatгруппе доступ на чтение к conf-каталогу и всему его содержимому и выполните доступ к самому каталогу:
+sudo chmod g+x conf
+Сделайте vladimir пользователю владельца из webapps, work, temp, и logsкаталогов:
+sudo chown -R vladimir webapps/ work/ temp/ logs/
+Создайте файл службы systemd
+Tomcat должен знать, где установлена ??Java.
+update-alternatives --list java
+С помощью этой части информации мы можем создать файл службы systemd. Откройте файл с именем tomcat.serviceв /etc/systemd/systemкаталоге, набрав:
+sudo nano /etc/systemd/system/tomcat.service
+
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=network.target
+
+[Service]
+Type=forking
+
+Environment=JAVA_HOME=/usr/lib/jvm/jdk1.8.0_241
+Environment=CATALINA_PID=/opt/tomcat/temp/tomcat.pid
+Environment=CATALINA_HOME=/opt/tomcat
+Environment=CATALINA_BASE=/opt/tomcat
+Environment='CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC'
+Environment='JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom'
+
+ExecStart=/opt/tomcat/bin/startup.sh
+ExecStop=/opt/tomcat/bin/shutdown.sh
+
+User=vladimir
+Group=tomcat
+UMask=0007
+RestartSec=10
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+Затем перезагрузите демон systemd, чтобы он знал о нашем служебном файле:
+sudo systemctl daemon-reload
+Запустите сервис Tomcat, набрав:
+sudo systemctl start tomcat
+Если установлен Firewall, добавить порт в исключения:
+sudo ufw allow 8080/tcp (sudo ufw allow 8080)
+Проверка:
+sudo systemctl status tomcat // Не отображается путь к java  и группа
+Добавить логин Tomcat (раскоментировать):
+sudo nano /opt/tomcat/conf/tomcat-users.xml
+Чтобы изменить ограничения IP-адресов, откройте соответствующие context.xml файлы (закоментировать или добавить нужный IP-адрес):
+sudo nano /opt/tomcat/webapps/manager/META-INF/context.xml  //Закоментировать (<!--   -->)
+sudo nano /opt/tomcat/webapps/host-manager/META-INF/context.xml //Закоментировать (<!--   -->)
+sudo systemctl restart tomcat
+
+Запуск томката из bin:
+cd /opt/tomcat/bin
+./startup.sh
+
+В др. источнике: Настройте необходимые переменные среды для Tomcat. Установите CATALINA_HOME для извлеченного каталога Tomcat .
+Кроме того, установите переменные среды Java в соответствии с установленной в вашей системе Java.
+Установите все эти переменные в файле /etc/profile.d/tomcat9.sh
+
+echo 'export CATALINA_HOME="/opt/tomcat/"'> /etc/profile.d/tomcat9.sh
+echo 'export JAVA_HOME="/usr/lib/jvm/jdk1.8.0_241"' >> /etc/profile.d/tomcat9.sh
+echo 'export JRE_HOME="/usr/lib/jvm/jdk1.8.0_241/jre"' >> /etc/profile.d/tomcat9.sh
+
+source /etc/profile.d/tomcat9.sh - ERROR
+
+Ещё:
+nano /etc/profile.d/tomcat9
+export CATALINA_HOME="/opt/tomcat/"
+export JAVA_HOME="/usr/lib/jvm/jdk1.8.0_241"
+export JRE_HOME="/usr/lib/jvm/jdk1.8.0_241/jre"
+
+source /etc/profile.d/tomcat9
+
+nano /opt/tomcat/conf/server.xml
+<!-- Tomcat listen on 8080 -->
+  <Connector port="8080" protocol="HTTP/1.1"
+       connectionTimeout="20000"
+       URIEncoding="UTF-8"
+       redirectPort="8443" />
+
+
+    <!-- Set /apple as default path -->
+    <Host name="localhost"  appBase="webapps"
+         unpackWARs="true" autoDeploy="true">
+
+<!--
+	 <Context path="" docBase="water">
+	     <!-- Default set of monitored resources -->
+	     <WatchedResource>WEB-INF/web.xml</WatchedResource>
+	 </Context>
+-->
+    </Host>
+	
+This file will automatically load variables after system reboot. To load in current environment run command:
+sudo systemctl stop tomcat
+sudo systemctl start tomcat
+
+source /etc/profile.d/tomcat9.sh - ERROR
+
+http://5.53.124.88:8080
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////INSTALL NGINX///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+https://mkyong.com/nginx/nginx-apache-tomcat-configuration-example/
+https://websiteforstudents.com/configure-nginx-proxy-server-for-tomcat-9-on-ubuntu-16-04-17-10-18-04/
+
+sudo apt-get install nginx
+
+systemctl stop nginx.service
+systemctl start nginx.service
+systemctl enable nginx.service
+
+/etc/nginx/sites-enabled/default
+
+server {
+  listen          80;
+  server_name     yourdomain.com;
+  root            /etc/tomcat7/webapps/apple;
+
+  proxy_cache one;
+
+  location / {
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-Server $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        http://5.53.124.88:8080/;
+  }
+}
+service nginx restart
+service nginx reload
+
+http://5.53.124.88:80
+//////////////////////////////////////////////////////////////////////////////////////////////////
+Общие команды
+pwd - полный путь к текущей директории
+groups - группы к кот принадлежит текущий пользователь
+vi /etc/group - список всех групп																//
+cd ..\ - смена каталога
+cd	Возвращает вас в ваш домашний каталог
+cd ~	Также возвращает вас в ваш домашний каталог
+cd /	Переносит в корневой каталог
+cd /root	Переносит в домашний каталог пользователя root, 									//
+		 или суперпользователя, чья учетная запись создается при установке системы; 			//
+		 для доступа к этому каталогу вы должны быть суперпользователем 						//
+																								//
+sudo netstat -ntulp - просмотр портов
+netstat -ltup								 													//
+-l или --listening - посмотреть только прослушиваемые порты 									//
+-p или --program - показать имя программы и ее PID 												//
+-t или --tcp  показать tcp порты 																	//
+-u или --udp показать udp порты 																//
+-n или --numeric показывать ip адреса в числовом виде 											//
+netstat -lntup | grep "httpd" - какое приложение прослушивает определенный порт					//
+netstat -lntup | grep ":80" - какая служба привязана к порту									//
+ss -lntu 																						//
+Cканированиe открытых/прослушиваемых портов на вашей системе Linux:								//
+sudo nmap -n -Pn -sS -sU -p- localhost
+
+Добавление порта в таблицу портов:																//
+iptables -A OUTPUT -p tcp -m tcp --dport 8080 -j ACCEPT											//
+service iptables save																			//
+																								//
+ps - список запущенных процессов
+ps au																//
+ps -ah	- 
+ps -ef - полноформатный список																	//
+ps -U root -u root - каждый процесс, выполняющийся с правами пользователя root					//
+ps -fG tomcat - процессы группы																	//
+ps -fg tomcat																								//
+																								//
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
